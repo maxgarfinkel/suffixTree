@@ -1,6 +1,8 @@
 package com.maxgarfinkel.suffixTree;
 
-class Edge<T> {
+import java.util.Iterator;
+
+class Edge<T> implements Iterable<T>{
 	private final int start;
 	private int end = -1;
 	private final Node<T> parentNode;
@@ -30,11 +32,40 @@ class Edge<T> {
 	 * 
 	 * @param suffix
 	 * @param activePoint
-	 * @return
+	 * @return 
 	 */
-	boolean insert(Suffix<T> suffix, ActivePoint<T> activePoint) {
-		// TODO Auto-generated method stub
-		return false;
+	void insert(Suffix<T> suffix, ActivePoint<T> activePoint) {
+		Object item = suffix.getEndItem();
+		Object nextItem = getItemAt(activePoint.getLength());
+		if(item.equals(nextItem)){
+			activePoint.incrementLength();
+			System.out.println("Active Point " + activePoint.toString());
+			System.out.println("Suffix " + suffix.toString());
+		}else{
+			split(suffix, activePoint);
+			suffix.decrement();
+			activePoint.updateAfterInsert(suffix);
+			System.out.println("Active Point " + activePoint.toString());
+			System.out.println("Suffix " + suffix.toString());
+			if(suffix.isEmpty())
+				return;
+			else
+				tree.insert(suffix);
+		}
+	}
+	
+	void split(Suffix<T> suffix, ActivePoint<T> activePoint){
+		Node<T> breakNode = new Node<T>(this, sequence, tree);
+		Edge<T> newEdge = new Edge<T>(suffix.getEndPosition(), breakNode, sequence, tree);
+		breakNode.insert(newEdge);
+		Edge<T> oldEdge = new Edge<T>(start+activePoint.getLength(), breakNode, sequence, tree);
+		oldEdge.end = end;
+		oldEdge.terminal = this.terminal;
+		breakNode.insert(oldEdge);
+		this.terminal = breakNode;
+		end = start+activePoint.getLength();
+		tree.setSuffixLink(breakNode);
+		tree.incrementInsertCount();
 	}
 
 	int getEnd(){
@@ -60,5 +91,31 @@ class Edge<T> {
 	
 	T getStartItem(){
 		return (T) sequence[start];
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		for(int i = start; i < getEnd(); i++){
+			sb.append(sequence[i].toString()).append(", ");
+		}
+		return sb.toString();
+	}
+
+	public Iterator<T> iterator() {
+		return new Iterator<T>(){
+			private int currentPosition = start;
+			public boolean hasNext() {
+				return currentPosition < getEnd();
+			}
+
+			public T next() {
+				return (T)sequence[currentPosition++];
+			}
+
+			public void remove() {
+				throw new UnsupportedOperationException("The remove method is not supported.");
+			}
+		};
 	}
 }

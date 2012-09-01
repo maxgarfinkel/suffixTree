@@ -13,11 +13,12 @@ class Suffix<T> {
 
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("[");
 		int end = getEndPosition();
-		for(int i = start; i < end; i++){
+		for(int i = start; i < end+1; i++){
 			sb.append(sequence[i]).append(",");
 		}
+		sb.append("]");
 		return sb.toString();
 	}
 	
@@ -28,10 +29,36 @@ class Suffix<T> {
 	 * the item at <code>sequence[0]</code>
 	 */
 	int getEndPosition(){
-		return end;
+		return end-1;
 	}
 	
 	Object getEndItem(){
-		return sequence[end];
+		return sequence[end-1];
+	}
+	
+	Object getStart(){
+		if(start >= sequence.length)
+			return null;
+		return sequence[start];
+	}
+	
+	void decrement(){
+		start++;
+	}
+	
+	void increment(){
+		end++;
+	}
+	
+	boolean isEmpty(){
+		return start == end;
+	}
+
+	int getRemaining() {
+		return (end-start)-1;
+	}
+
+	public Object getItemXFromEnd(int distanceFromEnd) {
+		return sequence[end-distanceFromEnd];
 	}
 }
