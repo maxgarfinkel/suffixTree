@@ -39,14 +39,11 @@ class Edge<T> implements Iterable<T>{
 		Object nextItem = getItemAt(activePoint.getLength());
 		if(item.equals(nextItem)){
 			activePoint.incrementLength();
-			System.out.println("Active Point " + activePoint.toString());
-			System.out.println("Suffix " + suffix.toString());
 		}else{
 			split(suffix, activePoint);
 			suffix.decrement();
 			activePoint.updateAfterInsert(suffix);
-			System.out.println("Active Point " + activePoint.toString());
-			System.out.println("Suffix " + suffix.toString());
+			
 			if(suffix.isEmpty())
 				return;
 			else

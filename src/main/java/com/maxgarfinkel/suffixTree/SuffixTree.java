@@ -1,17 +1,5 @@
 package com.maxgarfinkel.suffixTree;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-//TODO after any insert where active node node is not root follow suffix link.
-
-
 /**
  * A suffix tree implementation using Ukkonen's algorithm.
  * 
@@ -28,10 +16,7 @@ public class SuffixTree<T> {
 	private int currentEnd = 0;
 	private int insertsThisStep = 0;
 	private Node<T> lastNodeInserted = null;
-	private int pointlessVar;
-	
-	private Logger logger = Logger.getLogger(SuffixTree.class);
-	
+		
 	
 	/**
 	 * Construct and represent a suffix tree representation of the given sequence using Ukkonen's
@@ -49,7 +34,7 @@ public class SuffixTree<T> {
 	}
 	
 	private void buildTree(){
-		for(Object item : sequence){
+		for(@SuppressWarnings("unused") Object item : sequence){
 			suffix.increment();
 			insertsThisStep = 0;
 			insert(suffix);

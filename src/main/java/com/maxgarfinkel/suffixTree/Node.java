@@ -20,17 +20,19 @@ class Node<T> implements Iterable<Edge<T>>{
 	void insert(Suffix<T> suffix, ActivePoint<T> activePoint){
 		Object item = suffix.getEndItem();
 		if(edges.containsKey(item)){
+			if(tree.isNotFirstInsert() && activePoint.getNode() != tree.getRoot())
+				tree.setSuffixLink(activePoint.getNode());
 			activePoint.setEdge(edges.get(item));
 			activePoint.incrementLength();
-			System.out.println("Active Point " + activePoint.toString());
-			System.out.println("Suffix " + suffix.toString());
 		}else{
 			Edge<T> newEdge = new Edge<T>(suffix.getEndPosition(), this, sequence, tree);
 			edges.put((T)suffix.getEndItem(), newEdge);
 			suffix.decrement();
 			activePoint.updateAfterInsert(suffix);
-			System.out.println("Active Point " + activePoint.toString());
-			System.out.println("Suffix " + suffix.toString());
+			if(suffix.isEmpty())
+				return;
+			else
+				tree.insert(suffix);
 		}
 	}
 	

@@ -1,6 +1,5 @@
 package com.maxgarfinkel.suffixTree;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -282,6 +281,31 @@ public class SuffixTreeTest {
 			    .getTerminal().getSuffixLink();
 		assertThat(linkA_to_A2, is(root.getEdgeStarting("a").getTerminal()));
 	}
+	
+	
+	@Test
+	public void mississippi() throws Exception{
+		logger.debug("Test Mississippi");
+		String[] sequence = new String[]{"m", "i", "s", "s", "i", "s", "s", "i", "p", "p", "i"};	
+		SuffixTree<String> tree = new SuffixTree<String>(sequence);
+		logger.debug(Utils.printTreeForGraphViz(tree));
+		
+		Node<String> root = tree.getRoot();
+		assertThat(root.getEdgeCount(), is(5));
+		
+		Edge<String> m = root.getEdgeStarting("m");
+		Edge<String> i = root.getEdgeStarting("i");
+		Edge<String> s = root.getEdgeStarting("s");
+		Edge<String> p = root.getEdgeStarting("p");
+		Edge<String> leaf = root.getEdgeStarting(Leaf.getInstance());
+		
+		assertThat(m.getLength(), is(12));
+		assertThat(i.getLength(), is(1));
+		assertThat(s.getLength(), is(1));
+		assertThat(p.getLength(), is(1));
+		assertThat(leaf.getLength(), is(1));
+		
+	}
 
 	/**
 	 * Tests the case where a suffix link is followed but the active length is longer
@@ -314,6 +338,10 @@ public class SuffixTreeTest {
 		
 		Edge<String> root_leaf = root.getEdgeStarting(Leaf.getInstance());
 		assertThat(root_leaf.getLength(), is(1));
+		
+		//check problem edge.
+		Edge<String> root_d_o = root_d.getTerminal().getEdgeStarting("o");
+		assertThat(root_d_o.getLength(), is(1));
 		
 		
 		

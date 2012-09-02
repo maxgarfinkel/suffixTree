@@ -67,13 +67,22 @@ class ActivePoint<T> {
 			Object item = suffix.getStart();
 			activeEdge = root.getEdgeStarting(item);
 			decrementLength();
+			fixActiveEdgeAfterSuffixLink(suffix);
+			if(activeLength == 0)
+				activeEdge = null;
+			
 		}else if(activeNode.hasSuffixLink()){
 			activeNode = activeNode.getSuffixLink();
 			findTrueActiveEdge();
 			fixActiveEdgeAfterSuffixLink(suffix);
+			if(activeLength == 0)
+				activeEdge = null;
 		}else{
 			activeNode = root;
 			findTrueActiveEdge();
+			fixActiveEdgeAfterSuffixLink(suffix);
+			if(activeLength == 0)
+				activeEdge = null;
 		}
 	}
 	
@@ -84,10 +93,10 @@ class ActivePoint<T> {
 	 * point.
 	 */
 	private void fixActiveEdgeAfterSuffixLink(Suffix<T> suffix){
-		while(activeLength > activeEdge.getLength()){			
+		while(activeEdge != null && activeLength > activeEdge.getLength()){			
 			activeLength = activeLength - activeEdge.getLength();
 			activeNode = activeEdge.getTerminal();
-			Object item = suffix.getItemXFromEnd(activeLength);
+			Object item = suffix.getItemXFromEnd(activeLength+1);
 			activeEdge = activeNode.getEdgeStarting(item);
 		}
 		resetActivePointToTerminal();
