@@ -2,8 +2,14 @@ package com.maxgarfinkel.suffixTree;
 
 public class Algorithms {
 	
+	/**
+	 * Tests the supplied tree to see if contains the supplied suffix.
+	 * @param suffix The suffix which may exist in the supplied tree.
+	 * @param tree The tree which may contain the supplied suffix.
+	 * @return True if the suffix is contained within the supplied tree. False otherwise.
+	 */
 	public <T> boolean containsSuffix(Object[] suffix, SuffixTree<T> tree){
-		suffix = Utils.addLeafToSequence(suffix, Leaf.getInstance());
+		suffix = Utils.addTerminalToSequence(suffix, SequenceTerminal.getInstance());
 		Node<T> node = tree.getRoot();
 		Edge<T> edge = null;
 		int position = 0;

@@ -1,11 +1,24 @@
 package com.maxgarfinkel.suffixTree;
 
+/**
+ * Represents the Active Point used in Ukonnen's algorithm. This consists of the triple
+ * active node, active edge and active length, which is used to identify the point at
+ * which the next insertion should be considered.
+ * @author maxgarfinkel
+ *
+ * @param <T>
+ */
 class ActivePoint<T> {
 	private Node<T> activeNode;
 	private Edge<T> activeEdge;
 	private int activeLength;
 	private final Node<T> root;
 	
+	/**
+	 * Initialize the active point to the root of a suffix tree. This sets the 
+	 * active point to <code>{root,null,0}</code>
+	 * @param root
+	 */
 	ActivePoint(Node<T> root){
 		activeNode = root;
 		activeEdge = null;
@@ -13,51 +26,95 @@ class ActivePoint<T> {
 		this.root = root;
 	}
 	
+	/**
+	 * Sets the active point to a new node, edge, length tripple.
+	 * @param node
+	 * @param edge
+	 * @param length
+	 */
 	void setPosition(Node<T> node, Edge<T> edge, int length){
 		activeNode = node;
 		activeEdge = edge;
 		activeLength = length;
 	}
 	
+	/**
+	 * Sets the active edge.
+	 * @param edge The edge to which we set the active edge.
+	 */
 	void setEdge(Edge<T> edge){
 		activeEdge = edge;
 	}
 	
+	/**
+	 * Increments the active length.
+	 */
 	void incrementLength(){
 		activeLength++;
 		resetActivePointToTerminal();
 	}
 	
+	/**
+	 * Decrements the active length.
+	 */
 	void decrementLength(){
 		if(activeLength > 0)
 			activeLength--;
 		resetActivePointToTerminal();
 	}
 
+	/**
+	 * 
+	 * @return True if the active point is the root node. False if not.
+	 */
 	boolean isRootNode() {
 		return activeNode.equals(root) && activeEdge == null && activeLength == 0;
 	}
 
+	/**
+	 * 
+	 * @return True if active point is on a node. False if not. 
+	 */
 	boolean isNode() {
 		return activeEdge == null && activeLength == 0;
 	}
 
+	/**
+	 * Retrieves the active node.
+	 * @return The active node.
+	 */
 	Node<T> getNode() {
 		return activeNode;
 	}
 
+	/**
+	 * 
+	 * @return True if the active point is on an edge. False if not.
+	 */
 	boolean isEdge() {
 		return activeEdge != null;
 	}
 
+	/**
+	 * Retrieves the current active edge.
+	 * @return The active edge.
+	 */
 	Edge<T> getEdge() {
 		return activeEdge;
 	}
 	
+	/**
+	 * Retrieves the current active length.
+	 * @return The active length.
+	 */
 	int getLength(){
 		return activeLength;
 	}
 
+	/**
+	 * Resets the active point after an insert.
+	 * @param suffix The remaining suffix to be inserted.
+	 */
 	public void updateAfterInsert(Suffix<T> suffix) {
 		if(activeNode == root && suffix.isEmpty()){
 			activeNode = root;

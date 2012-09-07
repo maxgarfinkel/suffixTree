@@ -17,7 +17,7 @@ public class SuffixTreePerformanceTest {
 	      symbols[idx] = (char) ('a' + idx - 10);
 	  }
 	
-	private static final int multiplier = 1000000;
+	private static final int multiplier = 10000000;
 	Logger logger = Logger.getRootLogger();
 	
 	/**

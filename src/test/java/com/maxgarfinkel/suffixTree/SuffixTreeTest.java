@@ -44,25 +44,25 @@ public class SuffixTreeTest {
 		assertThat(edgeA.getItemAt(0), is("a"));
 		assertThat(edgeA.getItemAt(1), is("b"));
 		assertThat(edgeA.getItemAt(2), is("c"));
-		assertThat((Object)edgeA.getItemAt(3), is((Object)Leaf.getInstance()));
+		assertThat((Object)edgeA.getItemAt(3), is((Object)SequenceTerminal.getInstance()));
 		
 		Edge<String> edgeB = tree.getRoot().getEdgeStarting("b");
 		assertThat(edgeB.getLength(), is(3));
 		assertThat(edgeB.isTerminating(), is(false));
 		assertThat(edgeB.getItemAt(0), is("b"));
 		assertThat(edgeB.getItemAt(1), is("c"));
-		assertThat((Object)edgeB.getItemAt(2), is((Object)Leaf.getInstance()));
+		assertThat((Object)edgeB.getItemAt(2), is((Object)SequenceTerminal.getInstance()));
 		
 		Edge<String> edgeC = tree.getRoot().getEdgeStarting("c");
 		assertThat(edgeC.getLength(), is(2));
 		assertThat(edgeC.isTerminating(), is(false));
 		assertThat(edgeC.getItemAt(0), is("c"));
-		assertThat(edgeC.getItemAt(1), is((Object)Leaf.getInstance()));
+		assertThat(edgeC.getItemAt(1), is((Object)SequenceTerminal.getInstance()));
 		
-		Edge<String> edgeLeaf = tree.getRoot().getEdgeStarting(Leaf.getInstance());
+		Edge<String> edgeLeaf = tree.getRoot().getEdgeStarting(SequenceTerminal.getInstance());
 		assertThat(edgeLeaf.getLength(), is(1));
 		assertThat(edgeLeaf.isTerminating(), is(false));
-		assertThat(edgeLeaf.getItemAt(0), is((Object)Leaf.getInstance()));
+		assertThat(edgeLeaf.getItemAt(0), is((Object)SequenceTerminal.getInstance()));
 	}
 
 	@Test
@@ -88,24 +88,24 @@ public class SuffixTreeTest {
 		assertThat(edgeAB.isTerminating(), is(false));
 		assertThat(edgeAB.getItemAt(0), is("a"));
 		assertThat(edgeAB.getItemAt(1), is("b"));
-		assertThat((Object)edgeAB.getItemAt(2), is((Object)Leaf.getInstance()));
+		assertThat((Object)edgeAB.getItemAt(2), is((Object)SequenceTerminal.getInstance()));
 		
 		Edge<String> edgeB2 = nodeA1.getEdgeStarting("b");
 		assertThat(edgeB2.getLength(), is(2));
 		assertThat(edgeB2.isTerminating(), is(false));
 		assertThat(edgeB2.getItemAt(0), is("b"));
-		assertThat(edgeB2.getItemAt(1), is((Object)Leaf.getInstance()));
+		assertThat(edgeB2.getItemAt(1), is((Object)SequenceTerminal.getInstance()));
 		
 		Edge<String> edgeB = root.getEdgeStarting("b");
 		assertThat(edgeB.getLength(), is(2));
 		assertThat(edgeB.isTerminating(), is(false));
 		assertThat(edgeB.getItemAt(0), is("b"));
-		assertThat(edgeB.getItemAt(1), is((Object)Leaf.getInstance()));
+		assertThat(edgeB.getItemAt(1), is((Object)SequenceTerminal.getInstance()));
 		
-		Edge<String> edgeLeaf = tree.getRoot().getEdgeStarting(Leaf.getInstance());
+		Edge<String> edgeLeaf = tree.getRoot().getEdgeStarting(SequenceTerminal.getInstance());
 		assertThat(edgeLeaf.getLength(), is(1));
 		assertThat(edgeLeaf.isTerminating(), is(false));
-		assertThat(edgeLeaf.getItemAt(0), is((Object)Leaf.getInstance()));
+		assertThat(edgeLeaf.getItemAt(0), is((Object)SequenceTerminal.getInstance()));
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class SuffixTreeTest {
 		assertThat(edgeC.getLength(), is(2));
 		assertThat(edgeC.isTerminating(), is(false));
 		
-		Edge<String> edgeLeaf = root.getEdgeStarting(Leaf.getInstance());
+		Edge<String> edgeLeaf = root.getEdgeStarting(SequenceTerminal.getInstance());
 		assertThat(edgeLeaf.getLength(), is(1));
 		assertThat(edgeLeaf.isTerminating(), is(false));
 	}
@@ -264,7 +264,7 @@ public class SuffixTreeTest {
 		assertThat(edge_D.isTerminating(), is(false));
 		
 		//all edges from root->$
-		Edge<String> edge_leaf = root.getEdgeStarting(Leaf.getInstance());
+		Edge<String> edge_leaf = root.getEdgeStarting(SequenceTerminal.getInstance());
 		assertThat(edge_leaf.getLength(), is(1));
 		assertThat(edge_leaf.isTerminating(), is(false));
 		
@@ -297,7 +297,7 @@ public class SuffixTreeTest {
 		Edge<String> i = root.getEdgeStarting("i");
 		Edge<String> s = root.getEdgeStarting("s");
 		Edge<String> p = root.getEdgeStarting("p");
-		Edge<String> leaf = root.getEdgeStarting(Leaf.getInstance());
+		Edge<String> leaf = root.getEdgeStarting(SequenceTerminal.getInstance());
 		
 		assertThat(m.getLength(), is(12));
 		assertThat(i.getLength(), is(1));
@@ -336,14 +336,55 @@ public class SuffixTreeTest {
 		Edge<String> root_o = root.getEdgeStarting("o");
 		assertThat(root_o.getLength(), is(1));
 		
-		Edge<String> root_leaf = root.getEdgeStarting(Leaf.getInstance());
+		Edge<String> root_leaf = root.getEdgeStarting(SequenceTerminal.getInstance());
 		assertThat(root_leaf.getLength(), is(1));
 		
 		//check problem edge.
 		Edge<String> root_d_o = root_d.getTerminal().getEdgeStarting("o");
 		assertThat(root_d_o.getLength(), is(1));
+	}
+	
+	@Test
+	public void checkAlmasamolmaz() throws Exception{
+		logger.debug("Test String Almasamolmaz");
+		String[] sequence = new String[]{"a","l","m","a","s","a","m","o","l","m","a","z"};	
+		SuffixTree<String> tree = new SuffixTree<String>(sequence);
+		logger.debug(Utils.printTreeForGraphViz(tree));
 		
+		Node<String> root = tree.getRoot();
+		assertThat(root.getEdgeCount(), is(7));
+	}
+	
+	@Test
+	public void checkOoooooooo() throws Exception{
+		logger.debug("Test String Ooooooooo");
+		String[] sequence = new String[]{"o","o","o","o","o","o","o","o","o"};	
+		SuffixTree<String> tree = new SuffixTree<String>(sequence);
+		logger.debug(Utils.printTreeForGraphViz(tree));
 		
+		Node<String> root = tree.getRoot();
+		assertThat(root.getEdgeCount(), is(2));
+	}
+	
+	@Test
+	public void checkAbcadak() throws Exception{
+		logger.debug("Test String Abcadak");
+		String[] sequence = new String[]{"a","b","c","a","d","a","k"};	
+		SuffixTree<String> tree = new SuffixTree<String>(sequence);
+		logger.debug(Utils.printTreeForGraphViz(tree));
 		
+		Node<String> root = tree.getRoot();
+		assertThat(root.getEdgeCount(), is(6));
+	}
+	
+	@Test
+	public void checkAbcdefabxybcdmnabcdex() throws Exception{
+		logger.debug("Test String Abcadak");
+		String[] sequence = new String[]{"a","b","c","d","e","f","a","b","x","y","b","c","d","m","n","a","b","c","d","e","x"};	
+		SuffixTree<String> tree = new SuffixTree<String>(sequence);
+		logger.debug(Utils.printTreeForGraphViz(tree));
+		
+		Node<String> root = tree.getRoot();
+		assertThat(root.getEdgeCount(), is(11));
 	}
 }

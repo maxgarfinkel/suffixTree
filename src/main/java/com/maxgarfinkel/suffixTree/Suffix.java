@@ -1,10 +1,24 @@
 package com.maxgarfinkel.suffixTree;
 
+/**
+ * Represents the remaining suffix to be inserted during suffix tree construction.
+ * @author maxgarfinkel
+ *
+ * @param <T>
+ */
 class Suffix<T> {
 	private int start;
 	private int end;
 	private Object[] sequence;
 	
+	/**
+	 * Construct a subsequence of sequence. The subsequence will be a suffix of the sequence UP TO the
+	 * point in the sequence we have reached whilst running Ukonnen's algorithm. In this sense it is not
+	 * a true suffix of the sequence but only a suffix of the portion of the sequence we have so far parsed.
+	 * @param currentEnd The current end point (becomes the end of this suffix).
+	 * @param remainder The remaining items to be inserted into the tree (becomes the length of this suffix). 
+	 * @param sequence The sequence to which this suffix belongs.
+	 */
 	public Suffix(int currentEnd, int remainder, Object[] sequence) {
 		start = currentEnd-(remainder-1);
 		end = currentEnd;
@@ -32,33 +46,67 @@ class Suffix<T> {
 		return end-1;
 	}
 	
+	/**
+	 * Get the end item of this suffix.
+	 * @return The end item of sequence
+	 */
 	Object getEndItem(){
 		return sequence[end-1];
 	}
 	
+	/**
+	 * Get the start of this suffix.
+	 * @return
+	 */
 	Object getStart(){
 		if(start >= sequence.length)
 			return null;
 		return sequence[start];
 	}
 	
+	/**
+	 * Decrement the length of this suffix. This is done by
+	 * incrementing the start position. This is reducing its length
+	 * from the back. 
+	 */
 	void decrement(){
 		start++;
 	}
 	
+	/**
+	 * Increments the length of the suffix by incrementing the 
+	 * end position. The effectivly moves the suffix forward,
+	 * along the master sequence.
+	 */
 	void increment(){
 		end++;
 	}
 	
+	/**
+	 * Indicates if the suffix is empty.
+	 * @return
+	 */
 	boolean isEmpty(){
 		return start == end;
 	}
 
+	/**
+	 * Retrieves the count of remaining items in the suffix.
+	 * @return The number of items in the suffix.
+	 */
 	int getRemaining() {
 		return (end-start)-1;
 	}
 
+	/**
+	 * Retrieves the item the given distance from the end of the suffix.
+	 * @param distanceFromEnd The distance from the end.
+	 * @return The item the given distance from the end.
+	 * @throws IllegalArgumentException if the distance from end is greater than the length of the suffix.
+	 */
 	public Object getItemXFromEnd(int distanceFromEnd) {
+		if((end-distanceFromEnd) < start)
+			throw new IllegalArgumentException(distanceFromEnd + " extends before the start of this suffix: " + this);
 		return sequence[end-distanceFromEnd];
 	}
 }
