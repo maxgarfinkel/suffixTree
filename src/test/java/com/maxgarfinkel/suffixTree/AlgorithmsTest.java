@@ -16,14 +16,14 @@ public class AlgorithmsTest {
 	Logger logger = Logger.getRootLogger();
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		BasicConfigurator.resetConfiguration();
 		BasicConfigurator.configure();
 		logger.setLevel(Level.DEBUG);
 	}
 
 	@Test
-	public void containsSuffix() throws Exception {
+	public void containsSuffix(){
 		logger.debug("testContainsAllSuffixs");
 		String[] sequence = new String[]{"a","a","b","a","a","c"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -46,7 +46,7 @@ public class AlgorithmsTest {
 	}
 	
 	@Test
-	public void containsSuffix2() throws Exception {
+	public void containsSuffix2(){
 		logger.debug("testContainsAllSuffixs");
 		String[] sequence = new String[]{"a", "b", "a", "b", "c", "a", "b", "a", "d"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -69,7 +69,7 @@ public class AlgorithmsTest {
 	}
 	
 	@Test
-	public void containsSuffix3() throws Exception {
+	public void containsSuffix3(){
 		logger.debug("testContainsAllSuffixs");
 		String[] sequence = new String[]{"m","i","s","s","i","s","s","i","p","p","i"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);

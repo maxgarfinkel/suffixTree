@@ -23,13 +23,13 @@ public class SuffixTreePerformanceTest {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args){
 		BasicConfigurator.resetConfiguration();
 		BasicConfigurator.configure();
 		SuffixTreePerformanceTest app = new SuffixTreePerformanceTest();
 	}
 	
-	private SuffixTreePerformanceTest() throws Exception{
+	private SuffixTreePerformanceTest(){
 		logger.setLevel(Level.FATAL);
 		Runtime runtime = Runtime.getRuntime();
 		int stringSize = 10; 

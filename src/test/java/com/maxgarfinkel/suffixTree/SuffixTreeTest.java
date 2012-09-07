@@ -17,14 +17,14 @@ public class SuffixTreeTest {
 	Logger logger = Logger.getRootLogger();
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		BasicConfigurator.resetConfiguration();
 		BasicConfigurator.configure();
 		logger.setLevel(Level.DEBUG);
 	}
 
 	@Test
-	public void rootNotNull() throws Exception{
+	public void rootNotNull(){
 		logger.debug("Test Root Not Null");
 		String[] sequence = new String[]{"a"};
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -32,7 +32,7 @@ public class SuffixTreeTest {
 	}
 	
 	@Test
-	public void generatesSimplestTree() throws Exception{
+	public void generatesSimplestTree(){
 		logger.debug("Test Generates Simplest Tree");
 		String[] sequence = new String[]{"a", "b", "c"};
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -66,7 +66,7 @@ public class SuffixTreeTest {
 	}
 
 	@Test
-	public void simpleSplit() throws Exception{
+	public void simpleSplit(){
 		logger.debug("Test Simple Split");
 		String[] sequence = new String[]{"a", "a", "b"};
 		SuffixTree<String> tree  = new SuffixTree<String>(sequence);
@@ -109,7 +109,7 @@ public class SuffixTreeTest {
 	}
 
 	@Test
-	public void simpleSuffixLinking() throws Exception{
+	public void simpleSuffixLinking(){
 		logger.debug("Test Simple Suffix Linking");
 		String[] sequence = new String[]{"a", "b", "a", "b", "c"};
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -158,7 +158,7 @@ public class SuffixTreeTest {
 	}
 
 	@Test
-	public void followSuffixLinks() throws Exception{
+	public void followSuffixLinks(){
 		logger.debug("Test Follow Suffix Links");
 		String[] sequence = new String[]{"a", "b", "a", "b", "c", "a", "b", "a", "d"};
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -284,7 +284,7 @@ public class SuffixTreeTest {
 	
 	
 	@Test
-	public void mississippi() throws Exception{
+	public void mississippi(){
 		logger.debug("Test Mississippi");
 		String[] sequence = new String[]{"m", "i", "s", "s", "i", "s", "s", "i", "p", "p", "i"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -318,7 +318,7 @@ public class SuffixTreeTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void followSuffixLinkWhereLengthIsWrong() throws Exception{
+	public void followSuffixLinkWhereLengthIsWrong(){
 		logger.debug("Test Follow Suffix Link Where Length is Wrong");
 		String[] sequence = new String[]{"d", "e", "d", "o", "d", "o", "d", "e", "e", "o", "d", "o"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -345,7 +345,7 @@ public class SuffixTreeTest {
 	}
 	
 	@Test
-	public void checkAlmasamolmaz() throws Exception{
+	public void checkAlmasamolmaz(){
 		logger.debug("Test String Almasamolmaz");
 		String[] sequence = new String[]{"a","l","m","a","s","a","m","o","l","m","a","z"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -356,7 +356,7 @@ public class SuffixTreeTest {
 	}
 	
 	@Test
-	public void checkOoooooooo() throws Exception{
+	public void checkOoooooooo(){
 		logger.debug("Test String Ooooooooo");
 		String[] sequence = new String[]{"o","o","o","o","o","o","o","o","o"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -367,7 +367,7 @@ public class SuffixTreeTest {
 	}
 	
 	@Test
-	public void checkAbcadak() throws Exception{
+	public void checkAbcadak(){
 		logger.debug("Test String Abcadak");
 		String[] sequence = new String[]{"a","b","c","a","d","a","k"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);
@@ -378,7 +378,7 @@ public class SuffixTreeTest {
 	}
 	
 	@Test
-	public void checkAbcdefabxybcdmnabcdex() throws Exception{
+	public void checkAbcdefabxybcdmnabcdex(){
 		logger.debug("Test String Abcadak");
 		String[] sequence = new String[]{"a","b","c","d","e","f","a","b","x","y","b","c","d","m","n","a","b","c","d","e","x"};	
 		SuffixTree<String> tree = new SuffixTree<String>(sequence);

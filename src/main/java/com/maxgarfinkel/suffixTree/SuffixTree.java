@@ -18,6 +18,7 @@ public class SuffixTree<T> {
 	private Node<T> lastNodeInserted = null;
 		
 	
+	
 	/**
 	 * Construct and represent a suffix tree representation of the given sequence using Ukkonen's
 	 * algorithm.
@@ -25,7 +26,7 @@ public class SuffixTree<T> {
 	 * @param sequence the array of items for which we are going to generate a suffix tree.
 	 * @throws Exception 
 	 */
-	SuffixTree(T[] sequence) throws Exception{
+	SuffixTree(T[] sequence){
 		this.sequence = Utils.addTerminalToSequence(sequence, SequenceTerminal.getInstance());
 		root = new Node<T>(null,this.sequence,this);
 		activePoint = new ActivePoint<T>(root);
