@@ -1,11 +1,12 @@
 package com.maxgarfinkel.suffixTree;
 
 /**
- * Represents the Active Point used in Ukonnen's algorithm. This consists of the triple
- * active node, active edge and active length, which is used to identify the point at
- * which the next insertion should be considered.
+ * Represents the Active Point used in Ukonnen's algorithm. This consists of the
+ * triple active node, active edge and active length, which is used to identify
+ * the point at which the next insertion should be considered.
+ * 
  * @author maxgarfinkel
- *
+ * 
  * @param <T>
  */
 class ActivePoint<T> {
@@ -13,52 +14,56 @@ class ActivePoint<T> {
 	private Edge<T> activeEdge;
 	private int activeLength;
 	private final Node<T> root;
-	
+
 	/**
-	 * Initialize the active point to the root of a suffix tree. This sets the 
+	 * Initialize the active point to the root of a suffix tree. This sets the
 	 * active point to <code>{root,null,0}</code>
+	 * 
 	 * @param root
 	 */
-	ActivePoint(Node<T> root){
+	ActivePoint(Node<T> root) {
 		activeNode = root;
 		activeEdge = null;
 		activeLength = 0;
 		this.root = root;
 	}
-	
+
 	/**
 	 * Sets the active point to a new node, edge, length tripple.
+	 * 
 	 * @param node
 	 * @param edge
 	 * @param length
 	 */
-	void setPosition(Node<T> node, Edge<T> edge, int length){
+	void setPosition(Node<T> node, Edge<T> edge, int length) {
 		activeNode = node;
 		activeEdge = edge;
 		activeLength = length;
 	}
-	
+
 	/**
 	 * Sets the active edge.
-	 * @param edge The edge to which we set the active edge.
+	 * 
+	 * @param edge
+	 *            The edge to which we set the active edge.
 	 */
-	void setEdge(Edge<T> edge){
+	void setEdge(Edge<T> edge) {
 		activeEdge = edge;
 	}
-	
+
 	/**
 	 * Increments the active length.
 	 */
-	void incrementLength(){
+	void incrementLength() {
 		activeLength++;
 		resetActivePointToTerminal();
 	}
-	
+
 	/**
 	 * Decrements the active length.
 	 */
-	void decrementLength(){
-		if(activeLength > 0)
+	void decrementLength() {
+		if (activeLength > 0)
 			activeLength--;
 		resetActivePointToTerminal();
 	}
@@ -68,12 +73,13 @@ class ActivePoint<T> {
 	 * @return True if the active point is the root node. False if not.
 	 */
 	boolean isRootNode() {
-		return activeNode.equals(root) && activeEdge == null && activeLength == 0;
+		return activeNode.equals(root) && activeEdge == null
+				&& activeLength == 0;
 	}
 
 	/**
 	 * 
-	 * @return True if active point is on a node. False if not. 
+	 * @return True if active point is on a node. False if not.
 	 */
 	boolean isNode() {
 		return activeEdge == null && activeLength == 0;
@@ -81,6 +87,7 @@ class ActivePoint<T> {
 
 	/**
 	 * Retrieves the active node.
+	 * 
 	 * @return The active node.
 	 */
 	Node<T> getNode() {
@@ -97,96 +104,102 @@ class ActivePoint<T> {
 
 	/**
 	 * Retrieves the current active edge.
+	 * 
 	 * @return The active edge.
 	 */
 	Edge<T> getEdge() {
 		return activeEdge;
 	}
-	
+
 	/**
 	 * Retrieves the current active length.
+	 * 
 	 * @return The active length.
 	 */
-	int getLength(){
+	int getLength() {
 		return activeLength;
 	}
 
 	/**
 	 * Resets the active point after an insert.
-	 * @param suffix The remaining suffix to be inserted.
+	 * 
+	 * @param suffix
+	 *            The remaining suffix to be inserted.
 	 */
 	public void updateAfterInsert(Suffix<T> suffix) {
-		if(activeNode == root && suffix.isEmpty()){
+		if (activeNode == root && suffix.isEmpty()) {
 			activeNode = root;
 			activeEdge = null;
 			activeLength = 0;
-		}else if(activeNode == root){
+		} else if (activeNode == root) {
 			Object item = suffix.getStart();
 			activeEdge = root.getEdgeStarting(item);
 			decrementLength();
 			fixActiveEdgeAfterSuffixLink(suffix);
-			if(activeLength == 0)
+			if (activeLength == 0)
 				activeEdge = null;
-			
-		}else if(activeNode.hasSuffixLink()){
+
+		} else if (activeNode.hasSuffixLink()) {
 			activeNode = activeNode.getSuffixLink();
 			findTrueActiveEdge();
 			fixActiveEdgeAfterSuffixLink(suffix);
-			if(activeLength == 0)
+			if (activeLength == 0)
 				activeEdge = null;
-		}else{
+		} else {
 			activeNode = root;
 			findTrueActiveEdge();
 			fixActiveEdgeAfterSuffixLink(suffix);
-			if(activeLength == 0)
+			if (activeLength == 0)
 				activeEdge = null;
 		}
 	}
-	
+
 	/**
-	 * Deal with the case when we follow a suffix link but the active
-	 * length is greater than the new active edge length. In this
-	 * situation we must walk down the tree updating the entire active 
-	 * point.
+	 * Deal with the case when we follow a suffix link but the active length is
+	 * greater than the new active edge length. In this situation we must walk
+	 * down the tree updating the entire active point.
 	 */
-	private void fixActiveEdgeAfterSuffixLink(Suffix<T> suffix){
-		while(activeEdge != null && activeLength > activeEdge.getLength()){			
+	private void fixActiveEdgeAfterSuffixLink(Suffix<T> suffix) {
+		while (activeEdge != null && activeLength > activeEdge.getLength()) {
 			activeLength = activeLength - activeEdge.getLength();
 			activeNode = activeEdge.getTerminal();
-			Object item = suffix.getItemXFromEnd(activeLength+1);
+			Object item = suffix.getItemXFromEnd(activeLength + 1);
 			activeEdge = activeNode.getEdgeStarting(item);
 		}
 		resetActivePointToTerminal();
 	}
-	
+
 	/**
-	 * Finds the edge instance who's start item matches the current active
-	 * edge start item but comes from the current active node.
+	 * Finds the edge instance who's start item matches the current active edge
+	 * start item but comes from the current active node.
 	 */
-	private void findTrueActiveEdge(){
-		if(activeEdge != null){
+	private void findTrueActiveEdge() {
+		if (activeEdge != null) {
 			Object item = activeEdge.getStartItem();
 			activeEdge = activeNode.getEdgeStarting(item);
 		}
 	}
-	
+
 	/**
 	 * Resizes the active length in the case where we are sitting on a terminal.
+	 * 
 	 * @return true if reset occurs false otherwise.
 	 */
-	private boolean resetActivePointToTerminal(){
-		if(activeEdge !=null && activeEdge.getLength() == activeLength && activeEdge.isTerminating()){
+	private boolean resetActivePointToTerminal() {
+		if (activeEdge != null && activeEdge.getLength() == activeLength
+				&& activeEdge.isTerminating()) {
 			activeNode = activeEdge.getTerminal();
 			activeEdge = null;
 			activeLength = 0;
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
+
 	@Override
-	public String toString(){
-		return "{" + activeNode.toString() + ", " + activeEdge + ", " + activeLength+"}";
+	public String toString() {
+		return "{" + activeNode.toString() + ", " + activeEdge + ", "
+				+ activeLength + "}";
 	}
 }

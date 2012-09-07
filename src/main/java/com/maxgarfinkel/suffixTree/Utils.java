@@ -9,9 +9,13 @@ public class Utils {
 
 	/**
 	 * Appends a SequenceTerminal element to a supplied array.
-	 * @param sequence The sequence to which we are applying the terminating object.
-	 * @param terminatingObject The instance of the terminating object.
-	 * @return A new sequence with an extra element at the end containing the terminating object. 
+	 * 
+	 * @param sequence
+	 *            The sequence to which we are applying the terminating object.
+	 * @param terminatingObject
+	 *            The instance of the terminating object.
+	 * @return A new sequence with an extra element at the end containing the
+	 *         terminating object.
 	 */
 	static Object[] addTerminalToSequence(Object[] sequence,
 			SequenceTerminal terminatingObject) {
@@ -26,8 +30,10 @@ public class Utils {
 	/**
 	 * Generates a .dot format string for visualizing a suffix tree.
 	 * 
-	 * @param tree The tree for which we are generating a dot file.
-	 * @return A string containing the contents of a .dot representation of the tree.
+	 * @param tree
+	 *            The tree for which we are generating a dot file.
+	 * @return A string containing the contents of a .dot representation of the
+	 *         tree.
 	 */
 	static <T> String printTreeForGraphViz(SuffixTree<T> tree) {
 		LinkedList<Node<T>> stack = new LinkedList<Node<T>>();
