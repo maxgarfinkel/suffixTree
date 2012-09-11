@@ -29,17 +29,6 @@ public class SuffixTree<I,S extends Iterable<I>> {
 	
 	private Logger logger = Logger.getLogger(SuffixTree.class);
 
-	/*
-	SuffixTree(){
-		//sequence = new Sequence<I,S>();
-		root = new Node<I,S>(null, this.sequence, this);
-		activePoint = new ActivePoint<I,S>(root);
-		suffix = new Suffix<I, S>(0, 1, this.sequence);
-	}
-	*/
-	
-	
-	
 	/**
 	 * Construct and represent a suffix tree representation of the given
 	 * sequence using Ukkonen's algorithm.
@@ -63,22 +52,15 @@ public class SuffixTree<I,S extends Iterable<I>> {
 		logger.debug("fixing all open end points to " + currentEnd);
 		fixEndPoints();
 		int start = currentEnd;
-		//currentEnd += 1;
 		this.sequence.add(sequence);
 		int end  = currentEnd;
-		
 		for(I i : sequence){
 			end++;
 		}
 		suffix = new Suffix<I,S>(currentEnd,1,this.sequence);
-		
 		extendTree(start, end+1);
 	}
-/*
-	SequenceTerminal<S> getTerminal(S sequence){
-		return this.sequence.getTerminal();
-	}
-	*/
+
 	private void extendTree(int from, int to) {
 		logger.debug("extending tree from: " + from + " to: " + to);
 		logger.debug("starting with suffix: " + suffix);
@@ -89,17 +71,7 @@ public class SuffixTree<I,S extends Iterable<I>> {
 			currentEnd++;
 		}
 	}
-	/*
-	private void addSequenceToTree() {
-		for (@SuppressWarnings("unused")
-		Object item : sequence) {
-			suffix.increment();
-			insertsThisStep = 0;
-			insert(suffix);
-			currentEnd++;
-		}
-	}
-	*/
+
 	private void fixEndPoints(){
 		//walk tree setting each end node that doesn't have an
 		//explicit end to have an explicit end equal to the 

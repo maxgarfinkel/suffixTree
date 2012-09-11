@@ -11,18 +11,16 @@ import org.apache.log4j.Logger;
  * Represents a sequence of items. This plays the part of the string in a non
  * generic suffix tree implementation. This object automatically appends a
  * terminating item to the end of the instance which is included in all
- * operations. For example length provides the length of the sequence including
- * the terminating object.
+ * operations.
  * 
  * @author Max Garfinkel
  * 
- * @param <I>
+ * @param <I,S>
  */
 public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 
 	private Object[] masterSequence;
 	Logger logger = Logger.getLogger(Sequence.class);
-	//private final SequenceTerminal<S> sequenceTerminal;
 
 	/**
 	 * Initialize the sequence.
@@ -39,14 +37,8 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 		logger.debug("Consructed a sequence with length of " + masterSequence.length);
 		if(this.masterSequence == null)
 			throw new IllegalArgumentException("Sequence is null.");
-		
 	}
-	
-	/*
-	SequenceTerminal<S> getTerminal(){
-		return sequenceTerminal;
-	}
-*/
+
 	/**
 	 * Retrieve the item at the position specified by index.
 	 * 
@@ -54,24 +46,13 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 	 * @return
 	 */
 	Object getItem(int index) {
-		//if (index < sequence.length) {
-			return masterSequence[index];
-		//} else if (index == sequence.length)
-			//return sequenceTerminal;
-		//else
-			//throw new IndexOutOfBoundsException("index " + index
-				//	+ " greater than the length of this sequence. [" + sequence.length + "]");
+		return masterSequence[index];
 	}
 
 	/**
-	 * Retrieves the length of the sequence, including the terminating instance.
-	 * 
-	 * @return
+	 * Adds a Sequence to the suffix tree. 
+	 * @param sequence
 	 */
-	/*int getLength() {
-		return sequence.length + 1;
-	}*/
-
 	void add(S sequence){
 		List<Object> newMasterSequence = new ArrayList<Object>(masterSequence.length);
 		for(Object item : masterSequence)
@@ -84,30 +65,6 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 		newMasterSequence.add(terminal);
 		
 		masterSequence = newMasterSequence.toArray();
-		
-		//Object[] newMasterSequence = new Object[this.masterSequence.length + newItems.size()];
-		
-		/*
-		ArrayList<I> list = new ArrayList<I>();
-		for(I item : sequence)
-			list.add(item);
-		
-		Object[] items = new Object[this.sequence.length + 1 + list.size()];
-			
-		int start = this.sequence.length+1;
-		int end = list.size()+start;
-		int i = 0;
-		for(; i < this.sequence.length; i++){
-			items[i] = this.sequence[i];
-		}
-		
-		items[i] = this.sequenceTerminal;
-		
-		for(i = start; i < end; i++)
-			items[i] = list.get(i-start);
-		
-		this.sequence = items;
-		*/
 	}
 	
 	/**

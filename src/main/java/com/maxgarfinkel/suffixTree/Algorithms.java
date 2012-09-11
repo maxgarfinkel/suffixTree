@@ -50,7 +50,6 @@ public class Algorithms<I,S extends Iterable<I>> {
 		}
 		resetToRoot();
 		return containedSequences;
-		
 	}
 	
 	/**
@@ -65,36 +64,7 @@ public class Algorithms<I,S extends Iterable<I>> {
 	 */
 	public  boolean containsSuffix(S sequence){
 		return !getSequencesContainingSuffix(sequence).isEmpty();
-		/*resetToRoot();
-		boolean returnValue = containsSubSequence(sequence);
-		position++;
-		if(returnValue == true){
-			if(edge != null && edge.getLength() > position){
-				I item = edge.getItemAt(position);
-				if(item.getClass().equals(SequenceTerminal.class)){
-					returnValue = true;
-				}else{
-					returnValue = false;
-				}
-			}else if(edge != null && edge.getLength() == position){
-				if(edge.isTerminating()){
-					Collection<SequenceTerminal<S>> terminatingSequences = edge.getTerminal().getSuffixTerminals();
-					returnValue = terminatingSequences != null && !terminatingSequences.isEmpty();
-				}else{
-					returnValue = true;
-				}
-			}else if(edge != null && edge.getLength() > position){
-				returnValue = false;
-			}
-			else if(edge == null){
-				if(node.getSuffixTerminals() != null)
-					returnValue = true;
-				else
-					returnValue = false;
-			}
-		}
-		resetToRoot();
-		return returnValue;*/
+		
 	}
 	
 	private boolean containsSubSequence(S sequence){
