@@ -1,5 +1,6 @@
 package com.maxgarfinkel.suffixTree;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,12 +18,18 @@ public class Utils {
 	 * @return A new sequence with an extra element at the end containing the
 	 *         terminating object.
 	 */
-	static Object[] addTerminalToSequence(Object[] sequence,
-			SequenceTerminal terminatingObject) {
-		Object[] newSequence = new Object[sequence.length + 1];
+	static <I,S extends Iterable<I>> Object[] addTerminalToSequence(S sequence,
+			SequenceTerminal<S> terminatingObject) {
+		
+		ArrayList<Object> list = new ArrayList<Object>();
+		for(I item : sequence)
+			list.add(item);
+		
+		Object[] newSequence = new Object[list.size() + 1];
+		
 		int i = 0;
-		for (; i < sequence.length; i++)
-			newSequence[i] = sequence[i];
+		for (; i < list.size(); i++)
+			newSequence[i] = list.get(i);
 		newSequence[i] = terminatingObject;
 		return newSequence;
 	}
@@ -35,10 +42,10 @@ public class Utils {
 	 * @return A string containing the contents of a .dot representation of the
 	 *         tree.
 	 */
-	static <T> String printTreeForGraphViz(SuffixTree<T> tree) {
-		LinkedList<Node<T>> stack = new LinkedList<Node<T>>();
+	static <T,S extends Iterable<T>> String printTreeForGraphViz(SuffixTree<T,S> tree) {
+		LinkedList<Node<T,S>> stack = new LinkedList<Node<T,S>>();
 		stack.add(tree.getRoot());
-		Map<Node<T>, Integer> nodeMap = new HashMap<Node<T>, Integer>();
+		Map<Node<T,S>, Integer> nodeMap = new HashMap<Node<T,S>, Integer>();
 		nodeMap.put(tree.getRoot(), 0);
 		int nodeId = 1;
 
@@ -46,11 +53,11 @@ public class Utils {
 				"\ndigraph suffixTree{\n node [shape=circle, label=\"\", fixedsize=true, width=0.1, height=0.1]\n");
 
 		while (stack.size() > 0) {
-			LinkedList<Node<T>> childNodes = new LinkedList<Node<T>>();
-			for (Node<T> node : stack) {
+			LinkedList<Node<T,S>> childNodes = new LinkedList<Node<T,S>>();
+			for (Node<T,S> node : stack) {
 
 				// List<Edge> edges = node.getEdges();
-				for (Edge<T> edge : node) {
+				for (Edge<T,S> edge : node) {
 					int id = nodeId++;
 					if (edge.isTerminating()) {
 						childNodes.push(edge.getTerminal());
@@ -61,7 +68,8 @@ public class Utils {
 							.append(" [label=\"");
 					int end = edge.getEnd();
 					for (T item : edge) {
-						sb.append(item.toString());
+						if(item != null)
+							sb.append(item.toString());
 					}
 					sb.append("\"];\n");
 				}
@@ -71,7 +79,7 @@ public class Utils {
 
 		// loop again to find all suffix links.
 		sb.append("edge [color=red]\n");
-		for (Map.Entry<Node<T>, Integer> entry : nodeMap.entrySet()) {
+		for (Map.Entry<Node<T,S>, Integer> entry : nodeMap.entrySet()) {
 			Node n1 = entry.getKey();
 			int id1 = entry.getValue();
 

@@ -9,11 +9,11 @@ package com.maxgarfinkel.suffixTree;
  * 
  * @param <T>
  */
-class ActivePoint<T> {
-	private Node<T> activeNode;
-	private Edge<T> activeEdge;
+class ActivePoint<T,S extends Iterable<T>> {
+	private Node<T,S> activeNode;
+	private Edge<T,S> activeEdge;
 	private int activeLength;
-	private final Node<T> root;
+	private final Node<T,S> root;
 
 	/**
 	 * Initialize the active point to the root of a suffix tree. This sets the
@@ -21,7 +21,7 @@ class ActivePoint<T> {
 	 * 
 	 * @param root
 	 */
-	ActivePoint(Node<T> root) {
+	ActivePoint(Node<T,S> root) {
 		activeNode = root;
 		activeEdge = null;
 		activeLength = 0;
@@ -35,7 +35,7 @@ class ActivePoint<T> {
 	 * @param edge
 	 * @param length
 	 */
-	void setPosition(Node<T> node, Edge<T> edge, int length) {
+	void setPosition(Node<T,S> node, Edge<T,S> edge, int length) {
 		activeNode = node;
 		activeEdge = edge;
 		activeLength = length;
@@ -47,7 +47,7 @@ class ActivePoint<T> {
 	 * @param edge
 	 *            The edge to which we set the active edge.
 	 */
-	void setEdge(Edge<T> edge) {
+	void setEdge(Edge<T,S> edge) {
 		activeEdge = edge;
 	}
 
@@ -90,7 +90,7 @@ class ActivePoint<T> {
 	 * 
 	 * @return The active node.
 	 */
-	Node<T> getNode() {
+	Node<T,S> getNode() {
 		return activeNode;
 	}
 
@@ -107,7 +107,7 @@ class ActivePoint<T> {
 	 * 
 	 * @return The active edge.
 	 */
-	Edge<T> getEdge() {
+	Edge<T,S> getEdge() {
 		return activeEdge;
 	}
 
@@ -126,7 +126,7 @@ class ActivePoint<T> {
 	 * @param suffix
 	 *            The remaining suffix to be inserted.
 	 */
-	public void updateAfterInsert(Suffix<T> suffix) {
+	public void updateAfterInsert(Suffix<T,S> suffix) {
 		if (activeNode == root && suffix.isEmpty()) {
 			activeNode = root;
 			activeEdge = null;
@@ -159,7 +159,7 @@ class ActivePoint<T> {
 	 * greater than the new active edge length. In this situation we must walk
 	 * down the tree updating the entire active point.
 	 */
-	private void fixActiveEdgeAfterSuffixLink(Suffix<T> suffix) {
+	private void fixActiveEdgeAfterSuffixLink(Suffix<T,S> suffix) {
 		while (activeEdge != null && activeLength > activeEdge.getLength()) {
 			activeLength = activeLength - activeEdge.getLength();
 			activeNode = activeEdge.getTerminal();

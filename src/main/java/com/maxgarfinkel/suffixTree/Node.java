@@ -1,15 +1,19 @@
 package com.maxgarfinkel.suffixTree;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-class Node<T> implements Iterable<Edge<T>> {
-	private final Map<T, Edge<T>> edges = new HashMap<T, Edge<T>>();
-	private final Edge<T> incomingEdge;
-	private final Sequence<T> sequence;
-	private final SuffixTree<T> tree;
-	private Node<T> link = null;
+class Node<T,S extends Iterable<T>> implements Iterable<Edge<T,S>> {
+	private final Map<T, Edge<T,S>> edges = new HashMap<T, Edge<T,S>>();
+	private final Edge<T,S> incomingEdge;
+	private Set<SequenceTerminal<S>> sequenceTerminals = new HashSet<SequenceTerminal<S>>();
+	private final Sequence<T,S> sequence;
+	private final SuffixTree<T,S> tree;
+	private Node<T,S> link = null;
 
 	/**
 	 * Create a new node, for the supplied tree and sequence.
@@ -21,7 +25,7 @@ class Node<T> implements Iterable<Edge<T>> {
 	 * @param tree
 	 *            The tree to which this node belongs.
 	 */
-	Node(Edge<T> incomingEdge, Sequence<T> sequence, SuffixTree<T> tree) {
+	Node(Edge<T,S> incomingEdge, Sequence<T,S> sequence, SuffixTree<T,S> tree) {
 		this.incomingEdge = incomingEdge;
 		this.sequence = sequence;
 		this.tree = tree;
@@ -36,16 +40,19 @@ class Node<T> implements Iterable<Edge<T>> {
 	 *            The active point to insert it at.
 	 */
 	@SuppressWarnings("unchecked")
-	void insert(Suffix<T> suffix, ActivePoint<T> activePoint) {
+	void insert(Suffix<T,S> suffix, ActivePoint<T,S> activePoint) {
 		Object item = suffix.getEndItem();
+		
 		if (edges.containsKey(item)) {
-			if (tree.isNotFirstInsert()
-					&& activePoint.getNode() != tree.getRoot())
+			if (tree.isNotFirstInsert() && activePoint.getNode() != tree.getRoot())
 				tree.setSuffixLink(activePoint.getNode());
 			activePoint.setEdge(edges.get(item));
 			activePoint.incrementLength();
 		} else {
-			Edge<T> newEdge = new Edge<T>(suffix.getEndPosition(), this,
+			
+			saveSequenceTerminal(item);
+			
+			Edge<T,S> newEdge = new Edge<T,S>(suffix.getEndPosition(), this,
 					sequence, tree);
 			edges.put((T) suffix.getEndItem(), newEdge);
 			suffix.decrement();
@@ -54,6 +61,14 @@ class Node<T> implements Iterable<Edge<T>> {
 				return;
 			else
 				tree.insert(suffix);
+		}
+	}
+
+	private void saveSequenceTerminal(Object item) {
+		if(item.getClass().equals(SequenceTerminal.class)){
+			@SuppressWarnings("unchecked")
+			SequenceTerminal<S> terminal = (SequenceTerminal<S>) item;
+			sequenceTerminals.add(terminal);
 		}
 	}
 
@@ -67,7 +82,7 @@ class Node<T> implements Iterable<Edge<T>> {
 	 *             This is thrown when the edge already exists as an out bound
 	 *             edge of this node.
 	 */
-	void insert(Edge<T> edge) {
+	void insert(Edge<T,S> edge) {
 		if (edges.containsKey(edge.getStartItem()))
 			throw new IllegalArgumentException("Item " + edge.getStartItem()
 					+ " already exists in node " + toString());
@@ -80,7 +95,7 @@ class Node<T> implements Iterable<Edge<T>> {
 	 * @param item
 	 * @return The edge extending from this node starting with item.
 	 */
-	Edge<T> getEdgeStarting(Object item) {
+	Edge<T,S> getEdgeStarting(Object item) {
 		return edges.get(item);
 	}
 
@@ -107,7 +122,7 @@ class Node<T> implements Iterable<Edge<T>> {
 	 * @return An iterator which iterates over the child edges. No order is
 	 *         guaranteed.
 	 */
-	public Iterator<Edge<T>> iterator() {
+	public Iterator<Edge<T,S>> iterator() {
 		return edges.values().iterator();
 	}
 
@@ -116,7 +131,7 @@ class Node<T> implements Iterable<Edge<T>> {
 	 * @return The node that this nodes suffix link points to if it has one.
 	 *         Null if not.
 	 */
-	Node<T> getSuffixLink() {
+	Node<T,S> getSuffixLink() {
 		return link;
 	}
 
@@ -126,7 +141,7 @@ class Node<T> implements Iterable<Edge<T>> {
 	 * @param node
 	 *            The node this suffix link should point to.
 	 */
-	void setSuffixLink(Node<T> node) {
+	void setSuffixLink(Node<T,S> node) {
 		link = node;
 	}
 
@@ -137,5 +152,13 @@ class Node<T> implements Iterable<Edge<T>> {
 		else {
 			return "end of edge [" + incomingEdge.toString() + "]";
 		}
+	}
+
+	public Collection<SequenceTerminal<S>> getSuffixTerminals() {
+		return sequenceTerminals;
+	}
+	
+	public Collection<Edge<T,S>> getEdges(){
+		return edges.values();
 	}
 }

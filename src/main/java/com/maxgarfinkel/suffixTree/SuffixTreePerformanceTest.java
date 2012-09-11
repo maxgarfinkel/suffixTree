@@ -1,6 +1,8 @@
 package com.maxgarfinkel.suffixTree;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.BasicConfigurator;
@@ -44,7 +46,7 @@ public class SuffixTreePerformanceTest {
 					- runtime.freeMemory();
 
 			long start = System.nanoTime();
-			SuffixTree<Character> tree = new SuffixTree<Character>(s);
+			SuffixTree<Character,List<Character>> tree = new SuffixTree<Character,List<Character>>(Arrays.asList(s));
 			long end = System.nanoTime() - start;
 
 			long allocatedMemoryEnd = runtime.totalMemory()

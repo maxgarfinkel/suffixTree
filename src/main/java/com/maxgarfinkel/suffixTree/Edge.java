@@ -2,14 +2,14 @@ package com.maxgarfinkel.suffixTree;
 
 import java.util.Iterator;
 
-class Edge<T> implements Iterable<T> {
+class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 	private final int start;
 	private int end = -1;
-	private final Node<T> parentNode;
-	private final Sequence<T> sequence;
+	private final Node<T,S> parentNode;
+	private final Sequence<T,S> sequence;
 
-	private Node<T> terminal = null;
-	private SuffixTree<T> tree = null;
+	private Node<T, S> terminal = null;
+	private SuffixTree<T,S> tree = null;
 
 	/**
 	 * Create a new <code>Edge</code> object.
@@ -25,7 +25,7 @@ class Edge<T> implements Iterable<T> {
 	 *            The master {@link SuffixTree} containing the root element
 	 *            which this edge is a child of.
 	 */
-	Edge(int start, Node<T> parent, Sequence<T> sequence, SuffixTree<T> tree) {
+	Edge(int start, Node<T,S> parent, Sequence<T,S> sequence, SuffixTree<T,S> tree) {
 		this.start = start;
 		this.parentNode = parent;
 		this.sequence = sequence;
@@ -52,7 +52,7 @@ class Edge<T> implements Iterable<T> {
 	 *            The active point to insert it at.
 	 * @return
 	 */
-	void insert(Suffix<T> suffix, ActivePoint<T> activePoint) {
+	void insert(Suffix<T,S> suffix, ActivePoint<T,S> activePoint) {
 		Object item = suffix.getEndItem();
 		Object nextItem = getItemAt(activePoint.getLength());
 		if (item.equals(nextItem)) {
@@ -78,12 +78,12 @@ class Edge<T> implements Iterable<T> {
 	 * @param activePoint
 	 *            The active point to insert it at.
 	 */
-	private void split(Suffix<T> suffix, ActivePoint<T> activePoint) {
-		Node<T> breakNode = new Node<T>(this, sequence, tree);
-		Edge<T> newEdge = new Edge<T>(suffix.getEndPosition(), breakNode,
+	private void split(Suffix<T,S> suffix, ActivePoint<T,S> activePoint) {
+		Node<T,S> breakNode = new Node<T,S>(this, sequence, tree);
+		Edge<T,S> newEdge = new Edge<T,S>(suffix.getEndPosition(), breakNode,
 				sequence, tree);
 		breakNode.insert(newEdge);
-		Edge<T> oldEdge = new Edge<T>(start + activePoint.getLength(),
+		Edge<T,S> oldEdge = new Edge<T,S>(start + activePoint.getLength(),
 				breakNode, sequence, tree);
 		oldEdge.end = end;
 		oldEdge.terminal = this.terminal;
@@ -128,7 +128,7 @@ class Edge<T> implements Iterable<T> {
 	 * 
 	 * @return The terminating node if any exists, null otherwise.
 	 */
-	Node<T> getTerminal() {
+	Node<T,S> getTerminal() {
 		return terminal;
 	}
 
@@ -194,5 +194,10 @@ class Edge<T> implements Iterable<T> {
 						"The remove method is not supported.");
 			}
 		};
+	}
+	
+	void fixEnd(){
+		if(end == -1)
+			end = tree.getCurrentEnd();
 	}
 }

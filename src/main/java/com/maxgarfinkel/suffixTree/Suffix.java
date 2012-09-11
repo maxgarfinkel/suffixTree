@@ -8,10 +8,10 @@ package com.maxgarfinkel.suffixTree;
  * 
  * @param <T>
  */
-class Suffix<T> {
+class Suffix<T,S extends Iterable<T>> {
 	private int start;
 	private int end;
-	private Sequence<T> sequence;
+	private Sequence<T,S> sequence;
 
 	/**
 	 * Construct a subsequence of sequence. The subsequence will be a suffix of
@@ -28,7 +28,7 @@ class Suffix<T> {
 	 * @param sequence
 	 *            The sequence to which this suffix belongs.
 	 */
-	public Suffix(int currentEnd, int remainder, Sequence<T> sequence) {
+	public Suffix(int currentEnd, int remainder, Sequence<T,S> sequence) {
 		start = currentEnd - (remainder - 1);
 		end = currentEnd;
 		this.sequence = sequence;
@@ -36,7 +36,8 @@ class Suffix<T> {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("[");
+		StringBuilder sb = new StringBuilder("[(");
+		sb.append(start).append(", ").append(end).append(")");
 		int end = getEndPosition();
 		for (int i = start; i < end + 1; i++) {
 			sb.append(sequence.getItem(i)).append(",");
@@ -70,8 +71,8 @@ class Suffix<T> {
 	 * @return
 	 */
 	Object getStart() {
-		if (start >= sequence.getLength())
-			return null;
+		//if (start >= sequence.getLength())
+			//return null;
 		return sequence.getItem(start);
 	}
 
@@ -124,5 +125,10 @@ class Suffix<T> {
 			throw new IllegalArgumentException(distanceFromEnd
 					+ " extends before the start of this suffix: " + this);
 		return sequence.getItem(end - distanceFromEnd);
+	}
+	
+	void reset(int start, int end){
+		this.start = start;
+		this.end = end;
 	}
 }
