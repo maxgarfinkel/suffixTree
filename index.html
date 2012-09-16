@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Suffixtree : A java implementation of Ukkonen's suffix tree construction algorithm." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Suffixtree</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/maxgarfinkel/suffixTree">View on GitHub</a>
+
+          <h1 id="project_title">Suffixtree</h1>
+          <h2 id="project_tagline">A java implementation of Ukkonen's suffix tree construction algorithm.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/maxgarfinkel/suffixTree/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/maxgarfinkel/suffixTree/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Suffix Tree</h1>
+
+<p>A Java implementation of Ukkonen's suffix tree creation algorithm capable 
+of creating a generalized suffix tree.</p>
+
+<p>You will need to be familiar with Ukkonen's algorithm and suffix trees in
+general. Most of this library is based on this <a href="http://stackoverflow.com/questions/9452701/ukkonens-suffix-tree-algorithm-in-plain-english">Stack Overflow answer</a> </p>
+
+<p>This implementation is generic which allows the user to supply a custom
+character and word type.</p>
+
+<p>The tree should perform linearly with regard to the length of the string / 
+strings being added to it.</p>
+
+<h2>Design</h2>
+
+<h3>Main Classes</h3>
+
+<p><code>SuffixTree</code></p>
+
+<ul>
+<li>  Holds the root <code>Node</code>.</li>
+<li>  Holds the master <code>Sequence</code>.</li>
+<li>  Most of the state of the whole tree.</li>
+</ul><p><code>Node</code></p>
+
+<ul>
+<li>  Represents a branch within a tree.</li>
+<li>  Holds a collection of child <code>Edge</code>s.</li>
+<li>  Can iterate over is children E.g.</li>
+</ul><div class="highlight"><pre><span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="na">getRoot</span><span class="o">();</span>
+<span class="k">for</span><span class="o">(</span><span class="n">Edge</span> <span class="n">edge</span> <span class="o">:</span> <span class="n">node</span><span class="o">){</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">edge</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+<p><code>Edge</code></p>
+
+<ul>
+<li>Represents an edge within a tree.</li>
+<li>Can iterate over its length.</li>
+</ul><p><code>Sequence</code></p>
+
+<p><code>SequenceTerminal</code></p>
+
+<p><code>Suffix</code></p>
+
+<h2>Notes</h2>
+
+<p>SuffixTree.toString return a .dot file with the tree structure represented 
+within it. 
+To view these files use <a href="http://www.graphviz.org/">Graph Viz</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Suffixtree maintained by <a href="https://github.com/maxgarfinkel">maxgarfinkel</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
