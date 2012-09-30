@@ -1,26 +1,25 @@
 package com.maxgarfinkel.suffixTree;
 
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.apache.log4j.Logger;
 
 /**
- * A suffix tree implementation using Ukkonen's algorithm.
+ * A suffix tree implementation using Ukkonen's algorithm capable of generating a generialised suffix tree.
+ * 
+ * The type of both <i>character</i> and the <i>word</i> can be specified, and we call these <i>items</i> 
+ * and <i>sequences</i> respectively.
  * 
  * @author Max Garfinkel
  * 
  * @param <I>
  *            The type of the item within the sequence.
+ * @param <S>
+ * 			  The sequence type, which must iterate over items of type <code>I</code>
  */
 public class SuffixTree<I,S extends Iterable<I>> {
 
 	private final Node<I,S> root;
 	private final Sequence<I,S> sequence;
-	
-	//private Map<Integer, Sequence<I,S>> seqLengthToSequenceMap = new TreeMap<Integer, Sequence<I,S>>();
-	
+
 	private Suffix<I,S> suffix;
 	private final ActivePoint<I,S> activePoint;
 	private int currentEnd = 0;
@@ -30,6 +29,15 @@ public class SuffixTree<I,S extends Iterable<I>> {
 	private Logger logger = Logger.getLogger(SuffixTree.class);
 
 	/**
+	 * Constructs an empty suffix tree.
+	 */
+	public SuffixTree(){
+		sequence = new Sequence<I, S>();
+		root = new Node<I,S>(null, this.sequence, this);
+		activePoint = new ActivePoint<I,S>(root);
+	}
+	
+	/**
 	 * Construct and represent a suffix tree representation of the given
 	 * sequence using Ukkonen's algorithm.
 	 * 
@@ -38,57 +46,35 @@ public class SuffixTree<I,S extends Iterable<I>> {
 	 *            tree.
 	 * @throws Exception
 	 */
-	SuffixTree(S sequenceArray) {
+	public SuffixTree(S sequenceArray) {
 		sequence = new Sequence<I, S>(sequenceArray);
 		root = new Node<I,S>(null, this.sequence, this);
 		activePoint = new ActivePoint<I,S>(root);
-		suffix = new Suffix<I, S>(0, 1, this.sequence);
+		suffix = new Suffix<I, S>(0, 0, this.sequence);
 		extendTree(0,sequence.getLength());
 	}
 	
+	/**
+	 * Add a sequence to the suffix tree. It is immediately processed
+	 * and added to the tree. 
+	 * @param sequence A sequence to be added.
+	 */
 	public void add(S sequence){
-		
-		logger.debug("The active point is: " + activePoint.toString());
-		logger.debug("fixing all open end points to " + currentEnd);
-		fixEndPoints();
 		int start = currentEnd;
 		this.sequence.add(sequence);
-		int end  = currentEnd;
-		for(I i : sequence){
-			end++;
-		}
-		suffix = new Suffix<I,S>(currentEnd,1,this.sequence);
-		extendTree(start, end+1);
+		suffix = new Suffix<I,S>(currentEnd,currentEnd,this.sequence);
+		activePoint.setPosition(root, null, 0);
+		extendTree(start, this.sequence.getLength());
 	}
 
 	private void extendTree(int from, int to) {
-		logger.debug("extending tree from: " + from + " to: " + to);
-		logger.debug("starting with suffix: " + suffix);
 		for (int i = from; i < to; i++){
 			suffix.increment();
 			insertsThisStep = 0;
 			insert(suffix);
 			currentEnd++;
 		}
-	}
-
-	private void fixEndPoints(){
-		//walk tree setting each end node that doesn't have an
-		//explicit end to have an explicit end equal to the 
-		//current end.
-		
-		LinkedList<Edge<I,S>> stack = new LinkedList<Edge<I,S>>();
-		stack.addAll(root.getEdges());
-		while(!stack.isEmpty()){
-			Edge<I,S> edge = stack.removeFirst();
-			if(edge.isTerminating()){
-				stack.addAll(edge.getTerminal().getEdges());
-			}else{
-				edge.fixEnd();
-			}
-		}
-	}
-	
+	}	
 	
 
 	/**

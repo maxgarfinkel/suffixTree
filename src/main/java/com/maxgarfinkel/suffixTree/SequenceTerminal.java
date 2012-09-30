@@ -8,16 +8,7 @@ package com.maxgarfinkel.suffixTree;
  */
 class SequenceTerminal<S> {
 
-	//private static SequenceTerminal instance = null;
 	private final S sequence;
-	
-	/**
-	static SequenceTerminal getInstance() {
-		if (instance == null)
-			instance = new SequenceTerminal();
-		return instance;
-	}
-	*/
 	
 	SequenceTerminal(S sequence){
 		this.sequence = sequence;
@@ -37,7 +28,7 @@ class SequenceTerminal<S> {
 
 	@Override
 	public String toString() {
-		return "$";
+		return "$"+sequence.toString()+"$";
 	}
 	
 	public S getSequence(){

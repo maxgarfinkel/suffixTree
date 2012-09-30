@@ -10,6 +10,7 @@ package com.maxgarfinkel.suffixTree;
  * @param <T>
  */
 class ActivePoint<T,S extends Iterable<T>> {
+	
 	private Node<T,S> activeNode;
 	private Edge<T,S> activeEdge;
 	private int activeLength;
@@ -138,14 +139,13 @@ class ActivePoint<T,S extends Iterable<T>> {
 			fixActiveEdgeAfterSuffixLink(suffix);
 			if (activeLength == 0)
 				activeEdge = null;
-
 		} else if (activeNode.hasSuffixLink()) {
 			activeNode = activeNode.getSuffixLink();
 			findTrueActiveEdge();
 			fixActiveEdgeAfterSuffixLink(suffix);
 			if (activeLength == 0)
 				activeEdge = null;
-		} else {
+		} else{
 			activeNode = root;
 			findTrueActiveEdge();
 			fixActiveEdgeAfterSuffixLink(suffix);

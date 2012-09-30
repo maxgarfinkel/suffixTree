@@ -2,6 +2,8 @@ package com.maxgarfinkel.suffixTree;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 	private final int start;
 	private int end = -1;
@@ -10,6 +12,8 @@ class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 
 	private Node<T, S> terminal = null;
 	private SuffixTree<T,S> tree = null;
+	
+	private Logger logger = Logger.getLogger(this.getClass());
 
 	/**
 	 * Create a new <code>Edge</code> object.
@@ -80,7 +84,7 @@ class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 	 */
 	private void split(Suffix<T,S> suffix, ActivePoint<T,S> activePoint) {
 		Node<T,S> breakNode = new Node<T,S>(this, sequence, tree);
-		Edge<T,S> newEdge = new Edge<T,S>(suffix.getEndPosition(), breakNode,
+		Edge<T,S> newEdge = new Edge<T,S>(suffix.getEndPosition()-1, breakNode,
 				sequence, tree);
 		breakNode.insert(newEdge);
 		Edge<T,S> oldEdge = new Edge<T,S>(start + activePoint.getLength(),
@@ -101,6 +105,7 @@ class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 	 *         sequence.
 	 */
 	int getEnd() {
+		tree.getCurrentEnd();
 		return end != -1 ? end : tree.getCurrentEnd();
 	}
 
@@ -166,6 +171,8 @@ class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 		StringBuilder sb = new StringBuilder();
 		for (int i = start; i < getEnd(); i++) {
 			sb.append(sequence.getItem(i).toString()).append(", ");
+			if(sequence.getItem(i).getClass().equals(SequenceTerminal.class))
+				break;
 		}
 		return sb.toString();
 	}
@@ -179,13 +186,18 @@ class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 	public Iterator<T> iterator() {
 		return new Iterator<T>() {
 			private int currentPosition = start;
-
+			private boolean hasNext = true;
+			
 			public boolean hasNext() {
-				return currentPosition < getEnd();
+				return hasNext;
 			}
 
 			@SuppressWarnings("unchecked")
 			public T next() {
+				if(end == -1)
+					hasNext = !sequence.getItem(currentPosition).getClass().equals(SequenceTerminal.class);
+				else
+					hasNext = currentPosition < getEnd()-1;
 				return (T) sequence.getItem(currentPosition++);
 			}
 
@@ -194,10 +206,5 @@ class Edge<T, S extends Iterable<T>> implements Iterable<T> {
 						"The remove method is not supported.");
 			}
 		};
-	}
-	
-	void fixEnd(){
-		if(end == -1)
-			end = tree.getCurrentEnd();
 	}
 }

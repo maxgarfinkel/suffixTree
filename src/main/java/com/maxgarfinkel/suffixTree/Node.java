@@ -49,14 +49,16 @@ class Node<T,S extends Iterable<T>> implements Iterable<Edge<T,S>> {
 			activePoint.setEdge(edges.get(item));
 			activePoint.incrementLength();
 		} else {
-			
 			saveSequenceTerminal(item);
-			
-			Edge<T,S> newEdge = new Edge<T,S>(suffix.getEndPosition(), this,
+			Edge<T,S> newEdge = new Edge<T,S>(suffix.getEndPosition()-1, this,
 					sequence, tree);
 			edges.put((T) suffix.getEndItem(), newEdge);
 			suffix.decrement();
 			activePoint.updateAfterInsert(suffix);
+			
+			if(tree.isNotFirstInsert() && !this.equals(tree.getRoot())){
+				tree.getLastNodeInserted().setSuffixLink(this);
+			}
 			if (suffix.isEmpty())
 				return;
 			else
@@ -96,7 +98,7 @@ class Node<T,S extends Iterable<T>> implements Iterable<Edge<T,S>> {
 	 * @return The edge extending from this node starting with item.
 	 */
 	Edge<T,S> getEdgeStarting(Object item) {
-		return edges.get(item);
+			return edges.get(item);
 	}
 
 	/**
@@ -115,7 +117,6 @@ class Node<T,S extends Iterable<T>> implements Iterable<Edge<T,S>> {
 	 */
 	int getEdgeCount() {
 		return edges.size();
-
 	}
 
 	/**

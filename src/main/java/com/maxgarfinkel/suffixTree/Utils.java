@@ -34,6 +34,10 @@ public class Utils {
 		return newSequence;
 	}
 
+	static <T,S extends Iterable<T>> String printTreeForGraphViz(SuffixTree<T,S> tree) {
+		return printTreeForGraphViz(tree, true);
+	}
+	
 	/**
 	 * Generates a .dot format string for visualizing a suffix tree.
 	 * 
@@ -42,7 +46,7 @@ public class Utils {
 	 * @return A string containing the contents of a .dot representation of the
 	 *         tree.
 	 */
-	static <T,S extends Iterable<T>> String printTreeForGraphViz(SuffixTree<T,S> tree) {
+	static <T,S extends Iterable<T>> String printTreeForGraphViz(SuffixTree<T,S> tree, boolean printSuffixLinks) {
 		LinkedList<Node<T,S>> stack = new LinkedList<Node<T,S>>();
 		stack.add(tree.getRoot());
 		Map<Node<T,S>, Integer> nodeMap = new HashMap<Node<T,S>, Integer>();
@@ -66,9 +70,9 @@ public class Utils {
 
 					sb.append(nodeMap.get(node)).append(" -> ").append(id)
 							.append(" [label=\"");
-					int end = edge.getEnd();
+							
 					for (T item : edge) {
-						if(item != null)
+						//if(item != null)
 							sb.append(item.toString());
 					}
 					sb.append("\"];\n");
@@ -76,21 +80,21 @@ public class Utils {
 			}
 			stack = childNodes;
 		}
-
-		// loop again to find all suffix links.
-		sb.append("edge [color=red]\n");
-		for (Map.Entry<Node<T,S>, Integer> entry : nodeMap.entrySet()) {
-			Node n1 = entry.getKey();
-			int id1 = entry.getValue();
-
-			if (n1.hasSuffixLink()) {
-				Node n2 = n1.getSuffixLink();
-				Integer id2 = nodeMap.get(n2);
-				// if(id2 != null)
-				sb.append(id1).append(" -> ").append(id2).append(" ;\n");
+		if(printSuffixLinks){
+			// loop again to find all suffix links.
+			sb.append("edge [color=red]\n");
+			for (Map.Entry<Node<T,S>, Integer> entry : nodeMap.entrySet()) {
+				Node n1 = entry.getKey();
+				int id1 = entry.getValue();
+	
+				if (n1.hasSuffixLink()) {
+					Node n2 = n1.getSuffixLink();
+					Integer id2 = nodeMap.get(n2);
+					// if(id2 != null)
+					sb.append(id1).append(" -> ").append(id2).append(" ;\n");
+				}
 			}
 		}
-
 		sb.append("}");
 		return (sb.toString());
 	}

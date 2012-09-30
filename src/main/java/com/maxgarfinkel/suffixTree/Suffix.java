@@ -2,9 +2,11 @@ package com.maxgarfinkel.suffixTree;
 
 /**
  * Represents the remaining suffix to be inserted during suffix tree
- * construction.
+ * construction. This is essentially a start and end pointer into the 
+ * underlying sequence. This is like a kind of sliding window where the head
+ * can never fall behind the tail, and the tail can never fall behind the head.
  * 
- * @author maxgarfinkel
+ * @author max garfinkel
  * 
  * @param <T>
  */
@@ -19,19 +21,21 @@ class Suffix<T,S extends Iterable<T>> {
 	 * running Ukonnen's algorithm. In this sense it is not a true suffix of the
 	 * sequence but only a suffix of the portion of the sequence we have so far
 	 * parsed.
-	 * 
-	 * @param currentEnd
-	 *            The current end point (becomes the end of this suffix).
-	 * @param remainder
-	 *            The remaining items to be inserted into the tree (becomes the
-	 *            length of this suffix).
-	 * @param sequence
-	 *            The sequence to which this suffix belongs.
+	 * @param start The start position of the suffix within the sequence
+	 * @param end The end position of the suffix within the sequence
+	 * @param sequence The main sequence
 	 */
-	public Suffix(int currentEnd, int remainder, Sequence<T,S> sequence) {
-		start = currentEnd - (remainder - 1);
-		end = currentEnd;
+	public Suffix(int start, int end, Sequence<T,S> sequence) {
+		testStartAndEndValues(start, end);
+		testStartEndAgainstSequenceLength(start, end, sequence.getLength());
+		this.start = start;
+		this.end = end;
 		this.sequence = sequence;
+	}
+	
+	private void testStartEndAgainstSequenceLength(int start, int end, int sequenceLength){
+		if(start > sequenceLength || end > sequenceLength)
+			throw new IllegalArgumentException("Suffix start and end must be less than or equal to sequence length");
 	}
 
 	@Override
@@ -39,7 +43,7 @@ class Suffix<T,S extends Iterable<T>> {
 		StringBuilder sb = new StringBuilder("[(");
 		sb.append(start).append(", ").append(end).append(")");
 		int end = getEndPosition();
-		for (int i = start; i < end + 1; i++) {
+		for (int i = start; i < end; i++) {
 			sb.append(sequence.getItem(i)).append(",");
 		}
 		sb.append("]");
@@ -53,7 +57,7 @@ class Suffix<T,S extends Iterable<T>> {
 	 *         suffix contains only the item at <code>sequence[0]</code>
 	 */
 	int getEndPosition() {
-		return end - 1;
+		return end;
 	}
 
 	/**
@@ -62,7 +66,9 @@ class Suffix<T,S extends Iterable<T>> {
 	 * @return The end item of sequence
 	 */
 	Object getEndItem() {
-		return sequence.getItem(end - 1);
+		if(isEmpty())
+			return null;
+		return sequence.getItem(end-1);
 	}
 
 	/**
@@ -71,8 +77,8 @@ class Suffix<T,S extends Iterable<T>> {
 	 * @return
 	 */
 	Object getStart() {
-		//if (start >= sequence.getLength())
-			//return null;
+		if(isEmpty())
+			return null;
 		return sequence.getItem(start);
 	}
 
@@ -81,6 +87,8 @@ class Suffix<T,S extends Iterable<T>> {
 	 * start position. This is reducing its length from the back.
 	 */
 	void decrement() {
+		if(start==end)
+			increment();
 		start++;
 	}
 
@@ -90,6 +98,9 @@ class Suffix<T,S extends Iterable<T>> {
 	 */
 	void increment() {
 		end++;
+		if(end > sequence.getLength())
+			throw new IndexOutOfBoundsException("Incremented suffix beyond end of sequence");
+		
 	}
 
 	/**
@@ -98,7 +109,7 @@ class Suffix<T,S extends Iterable<T>> {
 	 * @return
 	 */
 	boolean isEmpty() {
-		return start == end;
+		return start >= end || end > sequence.getLength();
 	}
 
 	/**
@@ -107,7 +118,10 @@ class Suffix<T,S extends Iterable<T>> {
 	 * @return The number of items in the suffix.
 	 */
 	int getRemaining() {
-		return (end - start) - 1;
+		if(isEmpty())
+			return 0;
+		else
+			return (end - start);
 	}
 
 	/**
@@ -121,14 +135,23 @@ class Suffix<T,S extends Iterable<T>> {
 	 *             suffix.
 	 */
 	public Object getItemXFromEnd(int distanceFromEnd) {
-		if ((end - distanceFromEnd) < start)
+		if ((end - (distanceFromEnd)) < start){
 			throw new IllegalArgumentException(distanceFromEnd
-					+ " extends before the start of this suffix: " + this);
+					+ " extends before the start of this suffix: ");
+		}
 		return sequence.getItem(end - distanceFromEnd);
 	}
 	
 	void reset(int start, int end){
+		testStartAndEndValues(start, end);
 		this.start = start;
 		this.end = end;
+	}
+	
+	private void testStartAndEndValues(int start, int end){
+		if(start < 0 || end < 0)
+			throw new IllegalArgumentException("You cannot set a suffix start or end to less than zero.");
+		if(end < start)
+			throw new IllegalArgumentException("A suffix end position cannot be less than its start position.");
 	}
 }

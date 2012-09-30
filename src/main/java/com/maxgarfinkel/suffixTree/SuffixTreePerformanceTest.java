@@ -1,6 +1,13 @@
 package com.maxgarfinkel.suffixTree;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -19,16 +26,18 @@ public class SuffixTreePerformanceTest {
 			symbols[idx] = (char) ('a' + idx - 10);
 	}
 
-	private static final int multiplier = 10000000;
+	private static final int multiplier = 100000;
 	Logger logger = Logger.getRootLogger();
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		BasicConfigurator.resetConfiguration();
 		BasicConfigurator.configure();
 		SuffixTreePerformanceTest app = new SuffixTreePerformanceTest();
+		app.testAgainstRealText();
 	}
 
 	private SuffixTreePerformanceTest() {
@@ -61,6 +70,53 @@ public class SuffixTreePerformanceTest {
 
 			tree = null;
 		}
+	}
+	
+public void testAgainstRealText() throws IOException{
+		
+		SuffixTree<Character, Word> tree = new SuffixTree<Character, Word>();
+		
+		
+		//open file and read line by line
+		URL fileUrl = this.getClass().getResource("summaTheologica.txt");
+		FileInputStream fstream = new FileInputStream(fileUrl.getFile());
+
+		// Get the object of DataInputStream
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+		String strLine;
+
+		//logger.setLevel(Level.INFO);
+		int lineCount = 0;
+		//Read File Line By Line
+		
+		long totalTime = System.nanoTime();
+		long time = System.nanoTime();
+		List<Long> timings = new ArrayList<Long>(80000);
+		while ((strLine = br.readLine()) != null)   {
+			lineCount++;
+			time = System.nanoTime();
+			for(String s : strLine.split(" ")){
+			  Word word = new Word(strLine);
+			  tree.add(word);	  
+			}
+			if(lineCount % 1000 == 0)
+				timings.add(System.nanoTime());
+		  
+		}
+		totalTime = System.nanoTime() - totalTime;
+		System.out.print("time <- c(");
+		for(Long i : timings){
+			System.out.print(i + "," );
+		}
+		System.out.print(")\n");
+
+		//Close the input stream
+		in.close();
+		logger.debug(lineCount + " lines imported in " + totalTime + " nano seconds.");
+		//logger.info(tree.toString());
+		
 	}
 
 	private void printMemoryUsage() {

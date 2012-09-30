@@ -19,24 +19,22 @@ import org.apache.log4j.Logger;
  */
 public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 
-	private Object[] masterSequence;
+	private List<Object> masterSequence = new ArrayList<Object>();
 	Logger logger = Logger.getLogger(Sequence.class);
 
+	Sequence(){
+	}
+	
 	/**
 	 * Initialize the sequence.
 	 * 
 	 * @param sequence
 	 */
 	Sequence(S sequence) {
-		ArrayList<Object> list = new ArrayList<Object>();
 		for(Object item : sequence)
-			list.add(item);
+			masterSequence.add(item);
 		SequenceTerminal<S> sequenceTerminal = new SequenceTerminal<S>(sequence);
-		list.add(sequenceTerminal);
-		this.masterSequence = list.toArray();
-		logger.debug("Consructed a sequence with length of " + masterSequence.length);
-		if(this.masterSequence == null)
-			throw new IllegalArgumentException("Sequence is null.");
+		masterSequence.add(sequenceTerminal);
 	}
 
 	/**
@@ -46,7 +44,7 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 	 * @return
 	 */
 	Object getItem(int index) {
-		return masterSequence[index];
+		return masterSequence.get(index);
 	}
 
 	/**
@@ -54,17 +52,11 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 	 * @param sequence
 	 */
 	void add(S sequence){
-		List<Object> newMasterSequence = new ArrayList<Object>(masterSequence.length);
-		for(Object item : masterSequence)
-			newMasterSequence.add(item);
-		
 		for(I item : sequence){
-			newMasterSequence.add(item);
+			masterSequence.add(item);
 		}
 		SequenceTerminal<S> terminal = new SequenceTerminal<S>(sequence);
-		newMasterSequence.add(terminal);
-		
-		masterSequence = newMasterSequence.toArray();
+		masterSequence.add(terminal);
 	}
 	
 	/**
@@ -76,12 +68,12 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 			int currentPosition = 0;
 
 			public boolean hasNext() {
-				return masterSequence.length + 1 > currentPosition;
+				return masterSequence.size() > currentPosition;
 			}
 
 			public Object next() {
-				if (currentPosition <= masterSequence.length)
-					return masterSequence[currentPosition++];
+				if (currentPosition <= masterSequence.size())
+					return masterSequence.get(currentPosition++);
 				else {
 					return null;
 				}
@@ -97,9 +89,9 @@ public class Sequence<I, S extends Iterable<I>> implements Iterable<Object> {
 	}
 	
 	int getLength(){
-		return masterSequence.length;
+		return masterSequence.size();
 	}
-
+	
 	public String toString(){
 		StringBuilder sb = new StringBuilder("Sequence = [");
 		for(Object i : masterSequence){

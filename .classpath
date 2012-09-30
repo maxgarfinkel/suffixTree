@@ -4,16 +4,8 @@
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/main/resources/com/maxgarfinkel.suffixTree"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/maxgarfinkel/.m2/repository/junit/junit/4.8.2/junit-4.8.2.jar" sourcepath="/Users/maxgarfinkel/.m2/repository/junit/junit/4.8.2/junit-4.8.2-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/Users/maxgarfinkel/.m2/repository/junit/junit/4.8.2/junit-4.8.2-javadoc.jar!/"/>
-			<attribute name="maven.groupId" value="junit"/>
-			<attribute name="maven.artifactId" value="junit"/>
-			<attribute name="maven.version" value="4.8.2"/>
-			<attribute name="maven.scope" value="test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
