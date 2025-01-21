@@ -1,4 +1,10 @@
-#Suffix Tree
+# Differences from the base version:
+1. Fixes [a bug](https://github.com/maxgarfinkel/suffixTree/issues/2) of incorrect suffix tree, which comes from wrong suffix links
+2. Fixes incomingEdge variable after split
+
+---
+
+# Suffix Tree
 
 A Java implementation of Ukkonen's suffix tree creation algorithm capable 
 of creating a generalized suffix tree.
@@ -12,15 +18,15 @@ character and word type.
 The tree should perform linearly with regard to the length of the string / 
 strings being added to it.
 
-##Design
-###Main Classes
+## Design
+### Main Classes
 `SuffixTree`
 *	Holds the root `Node`.
 *	Holds the master `Sequence`
 *	Most of the state of the whole tree.
  
 
-##Notes
+## Notes
 SuffixTree.toString return a .dot file with the tree structure represented 
 within it. 
 To view these files use [Graph Viz](http://www.graphviz.org/)

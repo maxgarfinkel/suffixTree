@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.stream.Stream;
+
 public class GeneralisedSuffixTreeTests {
 
 	private static Logger LOGGER = Logger.getLogger(GeneralisedSuffixTreeTests.class);
@@ -210,6 +212,24 @@ public class GeneralisedSuffixTreeTests {
 		int edgeMChildCount = edgeM.getTerminal().getEdgeCount();
 		assertThat(edgeMChildCount, is(4));
 		
+	}
+
+	@Test
+	public void hasCorrectSuffixLinks(){
+		LOGGER.debug("Creates the correct suffix tree for the specified order");
+		Word word1 = new Word("wabbbbcdxabbbbcd");
+		Word word2 = new Word("yabbbbcdzabbbbcd");
+		Word word3 = new Word("bbbb");
+		SuffixTree<Character,Word> tree = new SuffixTree<>();
+		Stream.of(
+				word3,
+				word2,
+				word1
+		).forEachOrdered(tree::add);
+
+		TestUtils.everySuffixReachableFromRoot(word1, tree);
+		TestUtils.everySuffixReachableFromRoot(word2, tree);
+		TestUtils.everySuffixReachableFromRoot(word3, tree);
 	}
 
 }
